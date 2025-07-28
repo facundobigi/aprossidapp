@@ -21,6 +21,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   bool _obscurePassword = true;
+  
+  String capitalize(String value) {
+  if (value.isEmpty) return value;
+  return value[0].toUpperCase() + value.substring(1).toLowerCase();
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -56,18 +63,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 16),
                 _buildTextField(
-                  controller: nombreController,
-                  label: 'Nombre',
-                  icon: Icons.person,
-                  validator: (v) => v!.isEmpty ? 'Ingrese su nombre' : null,
-                ),
+  controller: nombreController,
+  label: 'Nombre',
+  icon: Icons.person,
+  validator: (v) => v!.isEmpty ? 'Ingrese su nombre' : null,
+  onChanged: (value) {
+    final capitalized = capitalize(value);
+    if (value != capitalized) {
+      nombreController.value = TextEditingValue(
+        text: capitalized,
+        selection: TextSelection.collapsed(offset: capitalized.length),
+      );
+    }
+  },
+),
+
                 const SizedBox(height: 16),
                 _buildTextField(
-                  controller: apellidoController,
-                  label: 'Apellido',
-                  icon: Icons.person_outline,
-                  validator: (v) => v!.isEmpty ? 'Ingrese su apellido' : null,
-                ),
+  controller: apellidoController,
+  label: 'Apellido',
+  icon: Icons.person_outline,
+  validator: (v) => v!.isEmpty ? 'Ingrese su apellido' : null,
+  onChanged: (value) {
+    final capitalized = capitalize(value);
+    if (value != capitalized) {
+      apellidoController.value = TextEditingValue(
+        text: capitalized,
+        selection: TextSelection.collapsed(offset: capitalized.length),
+      );
+    }
+  },
+),
+
                 const SizedBox(height: 16),
                 _buildTextField(
   controller: matriculaController,
@@ -186,25 +213,28 @@ ElevatedButton(
   }
 
   Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    TextInputType? keyboardType,
-    String? Function(String?)? validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon, color: const Color(0xFF00A99D)),
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(12)),
-        ),
+  required TextEditingController controller,
+  required String label,
+  required IconData icon,
+  TextInputType? keyboardType,
+  String? Function(String?)? validator,
+  void Function(String)? onChanged, // 👈 AÑADIDO
+}) {
+  return TextFormField(
+    controller: controller,
+    keyboardType: keyboardType,
+    decoration: InputDecoration(
+      labelText: label,
+      prefixIcon: Icon(icon, color: const Color(0xFF00A99D)),
+      border: const OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
-      validator: validator,
-    );
-  }
+    ),
+    validator: validator,
+    onChanged: onChanged, // 👈 IMPLEMENTADO
+  );
+}
+
 
   void _register() async {
     if (!_formKey.currentState!.validate()) return;
@@ -220,16 +250,20 @@ ElevatedButton(
         password: passwordController.text.trim(),
       );
 
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userCredential.user!.uid)
-          .set({
-        'email': emailController.text.trim(),
-        'nombre': nombreController.text.trim(),
-        'apellido': apellidoController.text.trim(),
-        'matricula': matriculaController.text.trim(),
-        'dni': dniController.text.trim(),
-      });
+      final nombre = capitalize(nombreController.text.trim());
+final apellido = capitalize(apellidoController.text.trim());
+
+await FirebaseFirestore.instance
+    .collection('users')
+    .doc(userCredential.user!.uid)
+    .set({
+  'email': emailController.text.trim(),
+  'nombre': nombre,
+  'apellido': apellido,
+  'matricula': matriculaController.text.trim(),
+  'dni': dniController.text.trim(),
+});
+
 
       if (!mounted) return;
 
