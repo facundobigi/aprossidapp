@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "705883268332",
+    "project_id": "apross-app-7de19",
+    "storage_bucket": "apross-app-7de19.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:705883268332:android:f431ea798ba4101c2a71c9",
+        "android_client_info": {
+          "package_name": "com.example.apross"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEsqaO_M_-SYsYoMivVYlPCEbYluYYDRE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
