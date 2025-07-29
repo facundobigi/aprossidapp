@@ -77,7 +77,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                       builder: (_) => AlertDialog(
                         title: const Text('Enlace enviado'),
                         content: Text(
-                          'Hemos enviado un enlace de recuperación a:\n\n$email\n\nPor favor revisa tu correo y sigue las instrucciones.',
+                          'Hemos enviado un enlace de recuperación a:\n\n$email\n\nSi no lo ves en tu bandeja de entrada, por favor revisá también las carpetas de SPAM o Promociones.',
                         ),
                         actions: [
                           TextButton(
