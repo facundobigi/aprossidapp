@@ -91,13 +91,29 @@ class ForgotPasswordScreen extends StatelessWidget {
                       ),
                     );
                   } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Error: ${e.toString()}'),
-                        backgroundColor: Colors.redAccent,
-                      ),
-                    );
-                  }
+  String mensaje = 'Ocurrió un error inesperado';
+
+  if (e is FirebaseAuthException) {
+    switch (e.code) {
+      case 'user-not-found':
+        mensaje = 'No hay ninguna cuenta registrada con ese correo.';
+        break;
+      case 'invalid-email':
+        mensaje = 'El correo ingresado no es válido.';
+        break;
+      default:
+        mensaje = e.message ?? 'Error desconocido';
+    }
+  }
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(mensaje),
+      backgroundColor: Colors.redAccent,
+    ),
+  );
+}
+
                 },
                 child: const Text('Enviar enlace'),
               ),

@@ -207,11 +207,34 @@ class _LoginScreenState extends State<LoginScreen> {
         MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
     } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
-    } finally {
+  if (!mounted) return;
+
+  String mensaje = 'Ocurrió un error inesperado';
+
+  if (e is FirebaseAuthException) {
+    switch (e.code) {
+      case 'user-not-found':
+        mensaje = 'No existe un usuario con ese email.';
+        break;
+      case 'wrong-password':
+        mensaje = 'Contraseña incorrecta.';
+        break;
+      case 'invalid-email':
+        mensaje = 'Email no válido.';
+        break;
+      case 'user-disabled':
+        mensaje = 'Este usuario ha sido deshabilitado.';
+        break;
+      default:
+        mensaje = e.message ?? 'Error desconocido';
+    }
+  }
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(mensaje)),
+  );
+}
+ finally {
       if (mounted) {
         setState(() {
           _isLoading = false;

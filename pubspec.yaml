@@ -15,6 +15,7 @@ dependencies:
   firebase_auth: ^4.17.0
   cloud_firestore: ^4.17.0
   firebase_crashlytics: ^3.5.0   # 👈 agregá esta línea
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
   flutter_test:
@@ -27,3 +28,8 @@ flutter:
   assets:
     - assets/images/aprosscasa.png
     - assets/images/logo-apross.png
+flutter_launcher_icons:
+  android: true
+  image_path: "assets/images/aprosscasa.png"
+
+

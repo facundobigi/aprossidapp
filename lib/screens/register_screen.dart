@@ -272,11 +272,34 @@ await FirebaseFirestore.instance
       );
       Navigator.pop(context);
     } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
-    } finally {
+  if (!mounted) return;
+
+  String mensaje = 'Ocurrió un error inesperado';
+
+  if (e is FirebaseAuthException) {
+    switch (e.code) {
+      case 'email-already-in-use':
+        mensaje = 'Este email ya está registrado.';
+        break;
+      case 'invalid-email':
+        mensaje = 'El email ingresado no es válido.';
+        break;
+      case 'weak-password':
+        mensaje = 'La contraseña es muy débil (mínimo 8 caracteres).';
+        break;
+      case 'operation-not-allowed':
+        mensaje = 'Registro deshabilitado. Contacte al administrador.';
+        break;
+      default:
+        mensaje = e.message ?? 'Error desconocido';
+    }
+  }
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(mensaje)),
+  );
+}
+ finally {
       if (mounted) {
         setState(() {
           _isLoading = false;
